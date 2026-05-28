@@ -1,0 +1,229 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Chip from "../../components/Chip.astro";
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  // Ascending by date, so prev = older, next = newer within the same type.
+  const byDateAsc = [...posts].sort(
+    (a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
+  );
+  return posts.map((entry) => {
+    const sameType = byDateAsc.filter((p) => p.data.type === entry.data.type);
+    const i = sameType.findIndex((p) => p.id === entry.id);
+    return {
+      params: { slug: entry.id },
+      props: {
+        entry,
+        older: sameType[i - 1] ?? null,
+        newer: sameType[i + 1] ?? null,
+      },
+    };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<"blog">;
+  older: CollectionEntry<"blog"> | null;
+  newer: CollectionEntry<"blog"> | null;
+}
+
+const { entry, older, newer } = Astro.props;
+const { Content } = await render(entry);
+const { type, title, dek, date, template, relatedHref, relatedLabel } =
+  entry.data;
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+// Essays read in the narrow editorial column; use cases / notes a touch wider.
+const editorial = type === "essay";
+---
+
+<BaseLayout title={`${title} — Arachne`} description={dek}>
+  <article class:list={["post", { editorial }]}>
+    <header class="container col">
+      <div class="meta">
+        <Chip type={type} />
+        <time class="date mono tnum" datetime={date.toISOString()}
+          >{fmtDate(date)}</time
+        >
+        {template && <span class="template mono">{template}</span>}
+      </div>
+      <h1>{title}</h1>
+      <p class="dek lead">{dek}</p>
+    </header>
+
+    <div class="container col prose">
+      <Content />
+    </div>
+
+    <footer class="container col postfoot">
+      {
+        relatedHref && (
+          <a class="related link" href={relatedHref}>
+            {relatedLabel ?? "Read more"} →
+          </a>
+        )
+      }
+      <nav class="prevnext" aria-label="More in this type">
+        {
+          older ? (
+            <a href={`/blog/${older.id}/`} class="pn">
+              <span class="pn-label">← Older {type === "usecase" ? "use case" : type}</span>
+              <span class="pn-title">{older.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          newer ? (
+            <a href={`/blog/${newer.id}/`} class="pn right">
+              <span class="pn-label">Newer {type === "usecase" ? "use case" : type} →</span>
+              <span class="pn-title">{newer.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+      </nav>
+      <a class="rss link" href="/rss.xml">Subscribe via RSS</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    padding-block: var(--section-pad);
+  }
+  .col {
+    max-width: var(--measure-prose);
+  }
+  .post.editorial .col {
+    max-width: var(--measure-narrow);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: var(--s-12);
+    margin-bottom: var(--s-16);
+  }
+  .date {
+    font-size: var(--fs-11);
+    color: var(--fg-2);
+  }
+  .template {
+    font-size: var(--fs-10);
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+  }
+  h1 {
+    font-size: var(--ms-h1);
+  }
+  .dek {
+    margin-top: var(--s-12);
+    color: var(--fg-2);
+  }
+
+  /* Prose */
+  .prose {
+    margin-top: var(--s-32);
+  }
+  .post.editorial .prose {
+    font-family: var(--font-editorial);
+  }
+  .prose :global(h2) {
+    font-size: var(--ms-h2);
+    margin-top: var(--s-32);
+    margin-bottom: var(--s-12);
+  }
+  .prose :global(h3) {
+    margin-top: var(--s-24);
+    margin-bottom: var(--s-8);
+  }
+  .prose :global(p) {
+    margin-top: var(--s-16);
+    line-height: 1.7;
+    color: var(--fg-1);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-top: var(--s-16);
+    padding-left: var(--s-20);
+    color: var(--fg-1);
+  }
+  .prose :global(li) {
+    margin-top: var(--s-6);
+    line-height: 1.6;
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--accent-strong);
+    background: var(--bg-2);
+    padding: 1px 5px;
+    border-radius: var(--r-3);
+  }
+  .prose :global(strong) {
+    color: var(--fg-0);
+  }
+  .prose :global(a) {
+    color: var(--accent-strong);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .postfoot {
+    margin-top: var(--s-40);
+    padding-top: var(--s-24);
+    border-top: 1px solid var(--border-0);
+    display: grid;
+    gap: var(--s-24);
+  }
+  .related {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+  }
+  .prevnext {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-16);
+  }
+  .pn {
+    display: grid;
+    gap: 2px;
+    max-width: 46%;
+  }
+  .pn.right {
+    text-align: right;
+    margin-left: auto;
+  }
+  .pn-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-10);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: var(--fg-3);
+  }
+  .pn-title {
+    color: var(--fg-1);
+    font-size: var(--ms-small);
+  }
+  .pn:hover .pn-title {
+    color: var(--accent-strong);
+  }
+  .rss {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    color: var(--fg-2);
+  }
+</style>

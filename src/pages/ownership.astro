@@ -1,0 +1,196 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import Pillar from "../components/Pillar.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+
+const repoUrl = "https://github.com/";
+
+const pillars = [
+  {
+    eyebrow: "Files",
+    title: "Flows are files",
+    body: "A flow is a JSON file you own, version, and deploy where you choose. Read it, diff it, commit it. There is no proprietary store to escape from later.",
+  },
+  {
+    eyebrow: "Infrastructure",
+    title: "Runs where you run it",
+    body: "Arachne runs on infrastructure you control, from day one. Hosted infrastructure is available as a convenience, not a dependency.",
+  },
+  {
+    eyebrow: "Design",
+    title: "Control by design",
+    body: "Sensitive fields are redacted or blinded before anything reaches a model. Low-stakes inference can run on local models. The data never leaves infrastructure you control.",
+  },
+];
+---
+
+<BaseLayout
+  title="Ownership — Arachne"
+  description="Flows are JSON files you own, version, and deploy where you choose. Arachne runs on infrastructure you control. The flows are yours, the data is yours, the execution history is yours."
+>
+  <!-- HEADER -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>Ownership</Eyebrow>
+      <h1>The flows are yours. The data is yours. The history is yours.</h1>
+      <p class="lead measure">
+        Arachne runs on infrastructure you control, from day one. The ownership
+        model is identical regardless of where compute runs: a flow is a file,
+        the data is yours, and the execution history stays where you put it.
+      </p>
+    </div>
+  </section>
+
+  <!-- IT'S JUST A FILE -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>It's just a file</Eyebrow>
+      <h2>A flow is a JSON file you own, version, and deploy.</h2>
+      <p class="stack-p">
+        There is no opaque project format and no vendor database holding your
+        process hostage. A flow is blocks and edges in plain JSON. Read it,
+        diff it in review, commit it alongside the rest of your code, and
+        deploy it wherever you choose to run it.
+      </p>
+      <CodeBlock file="flow.json">{`{
+  "blocks": [
+    { "id": "ingest", "type": "Source", "source": "Webpage" },
+    { "id": "extract", "type": "ExtractInsights" },
+    { "id": "review", "type": "Gate" }
+  ],
+  "edges": [
+    { "from": "ingest", "to": "extract" },
+    { "from": "extract", "to": "review" }
+  ]
+}`}</CodeBlock>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="section">
+    <div class="container">
+      <Eyebrow>Files · Infrastructure · Design</Eyebrow>
+      <h2>Ownership is a property of the architecture, not a clause.</h2>
+      <div class="grid-3">
+        {pillars.map((p) => <Pillar eyebrow={p.eyebrow} title={p.title}>{p.body}</Pillar>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- SAME MODEL EVERYWHERE -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>Same model everywhere</Eyebrow>
+      <h2>Where compute runs does not change who owns the output.</h2>
+      <p class="stack-p">
+        Hosted infrastructure is a convenience. Run the same flow on your own
+        servers and nothing about ownership changes: the flow is the same JSON
+        file, the data lands in storage you control, and the execution history
+        is recorded where you direct it. Moving compute is an operational
+        choice, not a migration off a platform.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTROL BY DESIGN -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>Control by design</Eyebrow>
+      <h2>Data control is enforced by the system, not promised in a policy.</h2>
+      <p class="stack-p">
+        Sensitive fields are redacted or blinded before anything reaches a
+        model. Low-stakes inference can run on local models, so the data never
+        leaves infrastructure you control. A promise not to look at your data
+        is weaker than a system in which the data never arrives to be looked at.
+      </p>
+    </div>
+  </section>
+
+  <!-- OFFLINE / LOCAL-FIRST -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>Offline by default</Eyebrow>
+      <h2>The backing files work with no network at all.</h2>
+      <p class="stack-p">
+        The JSON and every intermediate state work fully offline. Cloud
+        features — AI blocks and connectors — degrade gracefully when there is
+        no network, rather than blocking the parts of the flow that don't need
+        one. Local use needs no account.
+      </p>
+    </div>
+  </section>
+
+  <!-- O2: PRICING PLACEHOLDER -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>Licensing</Eyebrow>
+      <h2>Licensing details are coming.</h2>
+      <!-- O2: OSS / commercial pricing block drops in here. Page is built price-agnostic. -->
+      <p class="stack-p">
+        The split between open-source and commercial licensing is still being
+        worked out. This page is written price-agnostic; the terms will land
+        here when they are settled.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta">
+    <div class="container measure">
+      <h2>Leave with the tool, not a credential.</h2>
+      <p class="stack-p">
+        The flows are yours, the data is yours, the execution history is yours —
+        wherever you choose to run it.
+      </p>
+      <div class="actions">
+        <Button href={repoUrl} variant="primary">Get started</Button>
+        <Button href="/how-it-works" variant="ghost">See how it works</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-top: var(--s-16);
+    max-width: 22ch;
+  }
+  .lead {
+    margin-top: var(--s-24);
+  }
+  h2 {
+    max-width: 26ch;
+  }
+  .stack-p {
+    margin-bottom: var(--s-16);
+  }
+  .section p {
+    margin-top: var(--s-16);
+  }
+
+  .grid-3 {
+    margin-top: var(--s-40);
+    display: grid;
+    gap: var(--s-20);
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-12);
+    margin-top: var(--s-32);
+  }
+
+  .cta {
+    background: var(--bg-1);
+  }
+
+  @media (max-width: 860px) {
+    .grid-3 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

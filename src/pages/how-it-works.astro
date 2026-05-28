@@ -1,0 +1,206 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import FlowSnippet from "../components/FlowSnippet.astro";
+import BlockCard from "../components/BlockCard.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+import Chip from "../components/Chip.astro";
+import { type BlockCategory } from "../lib/flow";
+
+const gateFlow: { label: string; category: BlockCategory }[] = [
+  { label: "Summarize", category: "synthesis" },
+  { label: "Gate", category: "control" },
+  { label: "Send", category: "action" },
+];
+---
+
+<BaseLayout
+  title="How it works — Arachne"
+  description="Sketch a rough pipeline, run it on real data, and harden it as the process reveals itself. Blocks declare their effects, files carry provenance, and humans hold the steps that aren't delegable."
+>
+  <!-- HEADER -->
+  <section class="section">
+    <div class="container">
+      <Eyebrow>How it works</Eyebrow>
+      <h1>You build the flow by running it.</h1>
+      <p class="lead measure">
+        A flow starts as a sketch and hardens into an audited workflow. Blocks
+        declare what they consume, emit, and change; every file carries a
+        provenance chain back to source; and the steps a person must own pause
+        for that person. The same tool runs a first draft and the mature
+        version it becomes.
+      </p>
+    </div>
+  </section>
+
+  <!-- 1. SKETCH → REFINE → FORMALIZE -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>Sketch · Refine · Formalize</Eyebrow>
+      <h2>Formalization is a journey, not a prerequisite.</h2>
+      <p class="stack-p">
+        A sketch block declares the rough shape of a step and stands up a
+        working pipeline in minutes — good enough to run on real data and hand
+        to a teammate. You don't have to specify everything before you start.
+      </p>
+      <p class="stack-p">
+        You harden it incrementally, as the process reveals itself. Add schema
+        enforcement where you've learned the data's shape. Add a Gate where the
+        naive automation keeps getting it wrong. Replace a sketch block with a
+        fully typed, validated block once you know exactly what it should do.
+      </p>
+      <p>
+        The same tool runs a first-pass pipeline for a two-person team and a
+        mature, audited, multi-stage workflow for an enterprise. The difference
+        between them is how much of the flow you've formalized — not which
+        product you bought.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. BLOCKS, EFFECTS, PROVENANCE -->
+  <section class="section">
+    <div class="container">
+      <Eyebrow>Blocks · Effects · Provenance</Eyebrow>
+      <h2>Two data types, declared effects, an unbroken chain.</h2>
+      <p class="measure stack-p">
+        All data is one of two types. A Document is natural language — Markdown,
+        plain text, or HTML — and is the input to AI blocks. A Record is JSON
+        with addressable fields, and is the input to deterministic logic. Every
+        block declares which it accepts and which it emits; a type mismatch
+        renders as an unverified connection on the canvas, before it runs.
+      </p>
+      <div class="cards">
+        <BlockCard
+          category="extraction"
+          name="Extract Insights"
+          effect="pure · deterministic"
+        />
+        <BlockCard category="action" name="Send" effect="effect: Send" />
+      </div>
+      <p class="measure stack-p">
+        Every block declares its purity and determinism, and effects propagate
+        along the graph — so you can see, before a run, which steps reach out
+        and touch the world. Every file then carries an append-only provenance
+        chain: which block produced it, from which inputs, at what time, using
+        what configuration, including the prompt version. AI outputs additionally
+        reference the specific source passages supporting each claim. Provenance
+        is never stripped, and a block cannot modify it.
+      </p>
+      <div class="prov measure">
+        <CodeBlock file="flow.json">{`"provenance": [
+  {
+    "block": "summarize-3",
+    "inputs": ["report.md"],
+    "at": "2026-05-28T14:02:11Z",
+    "config": { "prompt_version": "summarize@4" }
+  }
+]`}</CodeBlock>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. HUMANS ARE FIRST-CLASS -->
+  <section class="section">
+    <div class="container split">
+      <div class="measure">
+        <Eyebrow>Humans are first-class</Eyebrow>
+        <h2>Some judgments are not delegable.</h2>
+        <p class="stack-p">
+          A Gate or Manual Input block pauses execution, routes a structured
+          task to the right person, and resumes when they've acted. The flow
+          holds at that step — it does not guess, and it does not proceed
+          without the decision.
+        </p>
+        <p>
+          A waiting step carries the <Chip state="needs-input" /> chip on the
+          canvas, so the held decision is visible, not buried. Accountability is
+          not transferable; the tool routes it rather than absorbing it.
+        </p>
+      </div>
+      <div class="snippet-wrap">
+        <FlowSnippet
+          nodes={gateFlow}
+          caption="A Gate holds for human review between drafting and sending."
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ERRORS PRODUCE DURABLE FIXES -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>Errors produce durable fixes</Eyebrow>
+      <h2>A mistake becomes a change, not a recurrence.</h2>
+      <p class="stack-p">
+        When a flow makes a mistake, the error surfaces with full context: the
+        exact block that failed, the input it received, the output it produced,
+        and the provenance chain back to source. You're debugging a step, not
+        re-reading a transcript.
+      </p>
+      <p>
+        You identify the step that needs to change, make a targeted fix, verify
+        it on the canvas, and deploy it knowing it applies consistently to every
+        future run. The change is legible in the version history — what changed,
+        when, and why.
+      </p>
+    </div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="section">
+    <div class="container measure">
+      <Button href="/ownership" variant="ghost">Read about ownership</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-top: var(--s-16);
+    max-width: 22ch;
+  }
+  .lead {
+    margin-top: var(--s-24);
+  }
+
+  h2 {
+    max-width: 24ch;
+  }
+  .stack-p {
+    margin-bottom: var(--s-16);
+  }
+  .section p {
+    margin-top: var(--s-16);
+  }
+
+  .cards {
+    margin-top: var(--s-32);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-16);
+  }
+  .prov {
+    margin-top: var(--s-24);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--s-40);
+    align-items: center;
+  }
+  .snippet-wrap {
+    background: var(--bg-1);
+    border: 1px solid var(--border-0);
+    border-radius: var(--r-10);
+    padding: var(--s-32) var(--s-24);
+  }
+
+  @media (max-width: 860px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,138 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+
+const title = "Philosophy — Arachne";
+const description =
+  "Why some judgments stay with a person, why declared process beats a runtime trace, and the gap Arachne exists to close.";
+---
+
+<BaseLayout title={title} description={description} editorial={true}>
+  <section class="section philosophy">
+    <div class="container measure-narrow prose">
+      <Eyebrow>Philosophy</Eyebrow>
+      <h1>What a model can do, and what stays with a person.</h1>
+      <p class="lead">
+        Organizations already know how to do most of their work. The open
+        question is which parts can be written down, which parts can be handed
+        to a machine, and which parts must remain answerable to a human. These
+        are the lines Arachne is built around.
+      </p>
+
+      <h2>Not all judgment is delegable to AI</h2>
+      <p>
+        Accountability is not transferable. When a consequential decision turns
+        out to be wrong, someone is answerable for it, and that responsibility
+        cannot be handed to a model. The model produces an output; it does not
+        absorb the consequence.
+      </p>
+      <p>
+        Arachne routes the non-delegable judgments to a person rather than
+        pretending they were automated. A flow does not quietly fold a decision
+        that someone will have to answer for into a step labelled as machine
+        work.
+      </p>
+
+      <h2>Process and discretion are both real</h2>
+      <p>
+        Institutions run on standardized process and on delegated discretion.
+        The standard part — the repeatable, specifiable part — can be
+        formalized. The discretion part runs on human trust networks:
+        reputations, relationships, the knowledge of who is accountable to whom.
+      </p>
+      <p>
+        An AI cannot join those networks. A tool that ignores them models only
+        half of how an organization actually works, and the missing half is the
+        half that decides what happens when the standard case does not apply.
+      </p>
+
+      <h2>Verifiability is necessary but not sufficient</h2>
+      <p>
+        Being able to check an output after the fact does not, by itself, make a
+        process trustworthy. Trust also requires knowing the process is stable,
+        owned, and the same tomorrow as it was today.
+      </p>
+      <p>
+        A visible, declared flow provides that. A runtime trace of an agent's
+        improvisation does not — it tells you what happened once, not what will
+        happen again.
+      </p>
+
+      <h2>Data control is architectural, not a policy</h2>
+      <p>
+        A promise not to look at your data is weaker than a system where the
+        data never leaves infrastructure you control. Ownership that depends on
+        a vendor's good behavior is not ownership.
+      </p>
+      <p>
+        Sensitive fields can be redacted or blinded before anything reaches a
+        model. Low-stakes inference can run on local models. Where the data goes
+        is a property of how the system is built, not a clause you are asked to
+        trust.
+      </p>
+
+      <h2>Errors should fix the process, not patch the case</h2>
+      <p>
+        Organizations that function well do not blame individuals. They fix the
+        process so the mistake cannot recur. The repair outlives the incident.
+      </p>
+      <p>
+        When the process is a declared flow, the fix is a visible, testable,
+        versioned change — not an edit to a prompt you cannot fully see and
+        cannot reliably reproduce.
+      </p>
+
+      <h2>Ad-hoc AI use is not organizational process</h2>
+      <p>
+        Pasting content into a chat window encodes individual interactions, not
+        process. The history lives in one person's account and leaves when they
+        do. There is no artifact that says: this is how we do this.
+      </p>
+      <p>
+        Crossing from the first to the second — from a private habit to a stated
+        process the organization can read, test, and own — is the gap Arachne
+        exists to close.
+      </p>
+
+      <p class="onward">
+        <Button href="/blog" variant="ghost">Read the blog</Button>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prose {
+    font-family: var(--font-editorial);
+  }
+
+  .prose h1 {
+    margin-top: var(--s-16);
+    max-width: 24ch;
+  }
+
+  .prose .lead {
+    margin-top: var(--s-24);
+    color: var(--fg-1);
+  }
+
+  .prose h2 {
+    margin-top: var(--s-40);
+    max-width: 30ch;
+  }
+
+  .prose p {
+    margin-top: var(--s-16);
+    line-height: 1.8;
+    color: var(--fg-1);
+  }
+
+  .prose .lead {
+    line-height: 1.6;
+  }
+
+  .onward {
+    margin-top: var(--s-40);
+  }
+</style>

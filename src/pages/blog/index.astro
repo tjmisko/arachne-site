@@ -1,0 +1,178 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import Chip from "../../components/Chip.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const fmtDate = (d: Date) => d.toISOString().slice(0, 10);
+
+const filters = [
+  { key: "all", label: "All" },
+  { key: "essay", label: "Essay" },
+  { key: "usecase", label: "Use case" },
+  { key: "note", label: "Note" },
+];
+---
+
+<BaseLayout
+  title="Blog — Arachne"
+  description="Essays, use cases, and notes on building visible, auditable automation."
+>
+  <section class="section">
+    <div class="container">
+      <Eyebrow>Blog</Eyebrow>
+      <h1>Writing, worked out in the open.</h1>
+      <p class="lead measure">
+        The living counterpart to the <a class="link" href="/philosophy"
+          >Philosophy</a
+        > page. Essays argue ideas; use cases narrate the bundled templates;
+        notes record decisions. Newest first.
+        <a class="link" href="/rss.xml">RSS</a>.
+      </p>
+
+      <div class="filters" role="group" aria-label="Filter by type">
+        {
+          filters.map((f, i) => (
+            <button
+              class:list={["filter", { active: i === 0 }]}
+              data-filter={f.key}
+            >
+              {f.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <ul class="index">
+        {
+          posts.map((post) => (
+            <li data-type={post.data.type}>
+              <a class="row" href={`/blog/${post.id}/`}>
+                <time class="date mono tnum" datetime={post.data.date.toISOString()}>
+                  {fmtDate(post.data.date)}
+                </time>
+                <span class="chip-cell">
+                  <Chip type={post.data.type} />
+                </span>
+                <span class="title">{post.data.title}</span>
+                <span class="dek">{post.data.dek}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-top: var(--s-16);
+  }
+  .lead {
+    margin-top: var(--s-16);
+  }
+  .filters {
+    display: flex;
+    gap: var(--s-8);
+    margin-top: var(--s-32);
+    flex-wrap: wrap;
+  }
+  .filter {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: var(--fg-2);
+    background: transparent;
+    border: 1px solid var(--border-0);
+    border-radius: var(--r-4);
+    padding: var(--s-6) var(--s-10);
+    cursor: pointer;
+    transition:
+      color var(--t-medium),
+      border-color var(--t-medium);
+  }
+  .filter:hover {
+    color: var(--fg-0);
+  }
+  .filter.active {
+    color: var(--accent-strong);
+    border-color: var(--accent);
+  }
+
+  .index {
+    list-style: none;
+    padding: 0;
+    margin: var(--s-32) 0 0;
+    border-top: 1px solid var(--border-0);
+  }
+  .index li {
+    border-bottom: 1px solid var(--border-0);
+  }
+  .index li.hidden {
+    display: none;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 6.5rem 6rem 1fr;
+    grid-template-areas:
+      "date chip title"
+      "date chip dek";
+    gap: 2px var(--s-16);
+    padding: var(--s-16) var(--s-4);
+    align-items: baseline;
+    transition: background var(--t-medium);
+  }
+  .row:hover {
+    background: var(--bg-1);
+  }
+  .date {
+    grid-area: date;
+    font-size: var(--fs-11);
+    color: var(--fg-2);
+  }
+  .chip-cell {
+    grid-area: chip;
+  }
+  .title {
+    grid-area: title;
+    color: var(--fg-0);
+    font-weight: 600;
+  }
+  .dek {
+    grid-area: dek;
+    color: var(--fg-2);
+    font-size: var(--ms-small);
+  }
+
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "chip"
+        "title"
+        "dek"
+        "date";
+      gap: var(--s-6);
+    }
+  }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".filter");
+  const items = document.querySelectorAll<HTMLLIElement>(".index li");
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.filter;
+      buttons.forEach((b) => b.classList.toggle("active", b === btn));
+      items.forEach((li) => {
+        li.classList.toggle("hidden", key !== "all" && li.dataset.type !== key);
+      });
+    });
+  });
+</script>
