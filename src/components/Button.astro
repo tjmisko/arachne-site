@@ -1,0 +1,63 @@
+---
+interface Props {
+  href: string;
+  variant?: "primary" | "ghost";
+  size?: "sm" | "md";
+  external?: boolean;
+}
+const { href, variant = "primary", size = "md", external } = Astro.props;
+const isExternal = external ?? /^https?:\/\//.test(href);
+const rel = isExternal ? "noopener" : undefined;
+const target = isExternal ? "_blank" : undefined;
+---
+
+<a
+  href={href}
+  rel={rel}
+  target={target}
+  class:list={["btn", variant, size]}
+>
+  <slot />
+</a>
+
+<style>
+  /* CTA: mono label; accent border/fill on the primary only (spec §6). */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-8);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    border-radius: var(--r-6);
+    border: 1px solid transparent;
+    transition:
+      background var(--t-medium),
+      border-color var(--t-medium),
+      color var(--t-medium);
+    white-space: nowrap;
+  }
+  .md {
+    font-size: var(--fs-13);
+    padding: 0.6rem 1.1rem;
+  }
+  .sm {
+    font-size: var(--fs-12);
+    padding: 0.4rem 0.8rem;
+  }
+  .primary {
+    background: var(--accent);
+    color: var(--bg-0);
+  }
+  .primary:hover {
+    background: var(--accent-strong);
+  }
+  .ghost {
+    border-color: var(--border-1);
+    color: var(--fg-0);
+  }
+  .ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+</style>

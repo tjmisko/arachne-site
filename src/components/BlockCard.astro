@@ -1,0 +1,67 @@
+---
+import { categoryVar, type BlockCategory } from "../lib/flow";
+
+interface Props {
+  category: BlockCategory;
+  name: string;
+  /** Effect signature, e.g. "pure · deterministic" or "effect: Send". */
+  effect?: string;
+}
+const { category, name, effect } = Astro.props;
+const tint = categoryVar[category];
+---
+
+<div class="node" style={`--tint: ${tint}`}>
+  <div class="head">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="name">{name}</span>
+  </div>
+  {
+    effect && (
+      <div class="effect">
+        <span class="sig">{effect}</span>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .node {
+    min-width: 132px;
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-8);
+    background: var(--bg-2);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: var(--s-6);
+    padding: var(--s-8) var(--s-10);
+    border-top: 2px solid var(--tint);
+    background: color-mix(in srgb, var(--tint) 14%, var(--bg-2));
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--r-50);
+    background: var(--tint);
+    flex: none;
+  }
+  .name {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    font-weight: 700;
+    color: var(--fg-0);
+  }
+  .effect {
+    padding: var(--s-6) var(--s-10);
+  }
+  .sig {
+    font-family: var(--font-mono);
+    font-size: var(--fs-9);
+    color: var(--fg-2);
+    letter-spacing: 0.3px;
+  }
+</style>

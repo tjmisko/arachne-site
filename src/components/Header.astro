@@ -1,0 +1,105 @@
+---
+import Button from "./Button.astro";
+
+const nav = [
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/philosophy", label: "Philosophy" },
+  { href: "/ownership", label: "Ownership" },
+  { href: "/blog", label: "Blog" },
+];
+
+// Mark the active top-level section.
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+
+// TODO(O3/O4): point at the real GitHub repo once public.
+const repoUrl = "https://github.com/";
+---
+
+<header>
+  <div class="container bar">
+    <a href="/" class="wordmark-link" aria-label="Arachne home">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="wm">Arachne</span>
+    </a>
+    <nav aria-label="Primary">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class:list={["navlink", { active: isActive(item.href) }]}
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <Button href={repoUrl} variant="primary" size="sm">Get started</Button>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid var(--border-0);
+    background: color-mix(in srgb, var(--bg-1) 78%, transparent);
+    backdrop-filter: blur(var(--blur-toolbar));
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--s-24);
+    height: 56px;
+  }
+  .wordmark-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-8);
+  }
+  .wm {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: var(--fs-15);
+    color: var(--accent-strong);
+  }
+  .mark {
+    width: 13px;
+    height: 13px;
+    border-radius: var(--r-50);
+    border: 1px solid var(--accent);
+    box-shadow:
+      0 0 0 3px rgba(138, 154, 178, 0.12),
+      inset 0 0 0 3px var(--bg-1);
+  }
+  nav {
+    display: flex;
+    gap: var(--s-20);
+    margin-right: auto;
+  }
+  .navlink {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    color: var(--fg-2);
+    transition: color var(--t-medium);
+  }
+  .navlink:hover {
+    color: var(--fg-0);
+  }
+  .navlink.active {
+    color: var(--accent-strong);
+  }
+  @media (max-width: 680px) {
+    nav {
+      display: none;
+    }
+    .bar {
+      gap: var(--s-12);
+    }
+  }
+</style>

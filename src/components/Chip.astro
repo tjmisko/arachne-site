@@ -1,0 +1,48 @@
+---
+import { stateLabel, stateVar, type RunState } from "../lib/flow";
+
+type BlogType = "essay" | "usecase" | "note";
+
+interface Props {
+  /** Run-state chip (canvas grammar). */
+  state?: RunState;
+  /** Blog post-type chip (reuses the status-chip grammar, spec §5.5.2). */
+  type?: BlogType;
+}
+const { state, type } = Astro.props;
+
+const blogLabel: Record<BlogType, string> = {
+  essay: "ESSAY",
+  usecase: "USE CASE",
+  note: "NOTE",
+};
+const blogVar: Record<BlogType, string> = {
+  essay: "var(--accent-strong)",
+  usecase: "var(--cat-transformation)",
+  note: "var(--fg-2)",
+};
+
+const label = state ? stateLabel[state] : type ? blogLabel[type] : "";
+const color = state ? stateVar[state] : type ? blogVar[type] : "var(--fg-2)";
+---
+
+<span class="chip" style={`--chip: ${color}`}>{label}</span>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--fs-9);
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--chip);
+    border: 1px solid color-mix(in srgb, var(--chip) 45%, transparent);
+    background: color-mix(in srgb, var(--chip) 12%, transparent);
+    padding: 2px 6px;
+    border-radius: var(--r-3);
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+</style>

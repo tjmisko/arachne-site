@@ -1,0 +1,104 @@
+---
+const year = new Date().getFullYear();
+// TODO(O3): docs site doesn't exist yet — point at the repo README in the interim.
+const repoUrl = "https://github.com/";
+const docsUrl = "https://github.com/";
+---
+
+<footer>
+  <div class="container inner">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="wm">Arachne</span>
+    </div>
+    <p class="tagline">
+      A visible map of your process — every step declared, every output
+      traceable, the whole thing inspectable before it runs.
+    </p>
+
+    <nav aria-label="Footer">
+      <div class="col">
+        <span class="eyebrow">Product</span>
+        <a href="/how-it-works">How it works</a>
+        <a href="/ownership">Ownership</a>
+      </div>
+      <div class="col">
+        <span class="eyebrow">Read</span>
+        <a href="/philosophy">Philosophy</a>
+        <a href="/blog">Blog</a>
+        <a href="/rss.xml">RSS</a>
+      </div>
+      <div class="col">
+        <span class="eyebrow">Build</span>
+        <a href={repoUrl} rel="noopener">GitHub</a>
+        <a href={docsUrl} rel="noopener">Docs</a>
+      </div>
+    </nav>
+
+    <p class="legal">
+      <span class="mono">© {year} Arachne.</span>
+      Your flows, your data, your infrastructure.
+      <!-- TODO(O2): license / OSS-commercial line pending. -->
+    </p>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--border-0);
+    margin-top: var(--section-pad);
+    padding-block: var(--s-40);
+    background: var(--bg-1);
+  }
+  .inner {
+    display: grid;
+    gap: var(--s-20);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-8);
+  }
+  .wm {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-strong);
+    font-size: var(--fs-14);
+  }
+  .mark {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--r-50);
+    border: 1px solid var(--accent);
+  }
+  .tagline {
+    max-width: var(--measure-prose);
+    color: var(--fg-2);
+    font-size: var(--ms-small);
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-40);
+    margin-top: var(--s-8);
+  }
+  .col {
+    display: grid;
+    gap: var(--s-8);
+    align-content: start;
+  }
+  .col a {
+    font-size: var(--ms-small);
+    color: var(--fg-2);
+  }
+  .col a:hover {
+    color: var(--accent-strong);
+  }
+  .legal {
+    color: var(--fg-3);
+    font-size: var(--ms-small);
+    margin-top: var(--s-8);
+  }
+</style>

@@ -1,0 +1,285 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import Pillar from "../components/Pillar.astro";
+import FlowSnippet from "../components/FlowSnippet.astro";
+import { type BlockCategory } from "../lib/flow";
+
+const repoUrl = "https://github.com/";
+
+const pillars = [
+  {
+    eyebrow: "Visible",
+    title: "The process is the artifact",
+    body: "Every step declared, every connection explicit, the whole flow specified before it runs. You read a map, not a transcript.",
+  },
+  {
+    eyebrow: "Safe",
+    title: "Test before it touches production",
+    body: "Run it on real data, watch execution state move through the graph, and put a human in the loop wherever a judgment isn't delegable.",
+  },
+  {
+    eyebrow: "Auditable",
+    title: "Always reconstructable",
+    body: "What ran, what it consumed, what it produced — recorded. Every AI claim traces to its source passage. Provenance is never stripped.",
+  },
+];
+
+const verifyFlow: { label: string; category: BlockCategory }[] = [
+  { label: "Extract Insights", category: "extraction" },
+  { label: "Gate", category: "control" },
+  { label: "Draft", category: "synthesis" },
+];
+
+const sectors = [
+  ["Professional & financial services", "Due diligence, underwriting, KYC review, research synthesis."],
+  ["Legal & compliance", "Regulatory submissions, contract review, policy monitoring."],
+  ["Healthcare administration", "Prior authorization, referral triage, records processing."],
+  ["Government & public sector", "Grant applications, permit review, benefits intake."],
+  ["Research & intelligence", "Source monitoring, structured findings, report synthesis."],
+  ["Operations & procurement", "Vendor onboarding, RFP processing, approval chains."],
+];
+
+const notList = [
+  ["Not a general-purpose AI agent", "No open-ended autonomous execution. Every step is declared, typed, and inspectable before it runs."],
+  ["Not a low-code app builder", "Arachne builds automation flows, not user-facing applications."],
+  ["Not a storage system", "It processes and routes data; durable storage is a connector target."],
+  ["Not a replacement for judgment", "It routes judgment to the right person at the right time."],
+  ["Not a scripting environment", "Custom code is an escape hatch requiring explicit trust, not the default path."],
+];
+---
+
+<BaseLayout>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <Eyebrow>Automation for knowledge work</Eyebrow>
+      <h1 class="display">
+        See exactly what your automation does — before it runs on anything that
+        matters.
+      </h1>
+      <p class="lead measure">
+        Arachne is a visual canvas for building, running, and auditing
+        information-processing pipelines. A flow is a visible map of your
+        process — every step declared, every output traceable, the whole thing
+        inspectable before it touches production data.
+      </p>
+      <div class="actions">
+        <Button href={repoUrl} variant="primary">Get started</Button>
+        <Button href="/how-it-works" variant="ghost">See how it works</Button>
+      </div>
+    </div>
+    <div class="container hero-canvas">
+      <Hero />
+    </div>
+  </section>
+
+  <!-- THE GAP -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>The gap almost no one has crossed</Eyebrow>
+      <h2>"Using AI" usually means a browser tab and copy-paste.</h2>
+      <p class="stack-p">
+        The history lives in one person's account and disappears when they
+        leave. It isn't reproducible, can't be tested systematically, and
+        encodes individual interactions rather than process. Agentic execution
+        doesn't separate the data plane from the execution plane — there is no
+        declared program to inspect, only a trace of what the agent happened to
+        do.
+      </p>
+      <p>
+        Arachne makes errors legible and fixes durable. A change is visible in
+        the JSON, testable on the canvas before it touches production data, and
+        legible in the version history. You close the gap with confidence.
+      </p>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="section">
+    <div class="container">
+      <Eyebrow>Visible · Safe · Auditable</Eyebrow>
+      <h2>Built around what automation gets dangerously wrong, quietly.</h2>
+      <div class="grid-3">
+        {pillars.map((p) => <Pillar eyebrow={p.eyebrow} title={p.title}>{p.body}</Pillar>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENT BUILDS, HUMAN VERIFIES -->
+  <section class="section">
+    <div class="container split">
+      <div class="measure">
+        <Eyebrow>The inversion</Eyebrow>
+        <h2>The agent builds the flow. You verify it. Then it runs.</h2>
+        <p class="stack-p">
+          A coding agent can write the automation — but for the person
+          accountable for the outcome, its output is opaque. Arachne flips the
+          roles. The canvas agent drafts a first-pass flow; the canvas is how
+          you verify it. The agent generates; the human verifies; the flow runs.
+        </p>
+        <p>
+          Humans are first-class participants, not edge cases. A Gate pauses
+          execution, routes a structured task to the right person, and resumes
+          when they've acted.
+        </p>
+      </div>
+      <div class="snippet-wrap">
+        <FlowSnippet nodes={verifyFlow} caption="A Gate holds for human review between extraction and drafting." />
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT'S FOR -->
+  <section class="section">
+    <div class="container">
+      <Eyebrow>Who it's for</Eyebrow>
+      <h2>The moment a flow becomes important enough to own.</h2>
+      <p class="measure stack-p">
+        Not a sector — a moment of organizational maturity: when an information
+        flow is consistent enough to formalize and high-volume enough to
+        automate.
+      </p>
+      <dl class="grid-3 sectors">
+        {sectors.map(([term, desc]) => (
+          <div class="sector">
+            <dt>{term}</dt>
+            <dd>{desc}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- WHAT IT IS NOT -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>What it is not</Eyebrow>
+      <h2>It earns trust by refusing scope.</h2>
+      <ul class="not-list">
+        {notList.map(([term, desc]) => (
+          <li>
+            <span class="not-term">{term}.</span> {desc}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta">
+    <div class="container measure">
+      <h2>Leave with the tool, not a credential.</h2>
+      <p class="stack-p">
+        Arachne is local-first and needs no account for local use. The flows are
+        yours, the data is yours, the execution history is yours.
+      </p>
+      <div class="actions">
+        <Button href={repoUrl} variant="primary">Get started</Button>
+        <Button href={repoUrl} variant="ghost">View on GitHub</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(3.5rem, 8vh, 6rem) var(--section-pad);
+  }
+  h1.display {
+    margin-top: var(--s-16);
+    max-width: 20ch;
+  }
+  .lead {
+    margin-top: var(--s-24);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-12);
+    margin-top: var(--s-32);
+  }
+  .hero-canvas {
+    margin-top: var(--s-40);
+  }
+
+  h2 {
+    max-width: 22ch;
+  }
+  .stack-p {
+    margin-bottom: var(--s-16);
+  }
+  .section p {
+    margin-top: var(--s-16);
+  }
+
+  .grid-3 {
+    margin-top: var(--s-40);
+    display: grid;
+    gap: var(--s-20);
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--s-40);
+    align-items: center;
+  }
+  .snippet-wrap {
+    background: var(--bg-1);
+    border: 1px solid var(--border-0);
+    border-radius: var(--r-10);
+    padding: var(--s-32) var(--s-24);
+  }
+
+  .sectors {
+    margin-top: var(--s-32);
+  }
+  .sector dt {
+    font-weight: 600;
+    color: var(--fg-0);
+  }
+  .sector dd {
+    margin: var(--s-4) 0 0;
+    color: var(--fg-2);
+    font-size: var(--ms-small);
+  }
+
+  .not-list {
+    margin-top: var(--s-24);
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-16);
+  }
+  .not-list li {
+    padding-left: var(--s-20);
+    position: relative;
+    color: var(--fg-2);
+    font-size: var(--ms-small);
+  }
+  .not-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  .not-term {
+    color: var(--fg-0);
+    font-weight: 600;
+  }
+
+  .cta {
+    background: var(--bg-1);
+  }
+
+  @media (max-width: 860px) {
+    .grid-3,
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

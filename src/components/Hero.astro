@@ -1,0 +1,330 @@
+---
+import { categoryVar, type BlockCategory } from "../lib/flow";
+
+/**
+ * Animated execution hero (spec §4). A non-interactive loop of the bundled
+ * Analyst Weekly Memo flow: state advances node-by-node, the Gate holds for a
+ * human, then resumes. SVG markup + a tiny autonomous timeline script (no
+ * pointer handling, no input). `prefers-reduced-motion` freezes on the
+ * fully-completed state — a clean static diagram.
+ */
+
+interface FlowNode {
+  id: string;
+  label: string;
+  cat: BlockCategory;
+}
+
+const NODES: FlowNode[] = [
+  { id: "schedule", label: "Schedule", cat: "source" },
+  { id: "regularize", label: "Regularize", cat: "transformation" },
+  { id: "extract", label: "Extract Insights", cat: "extraction" },
+  { id: "gate", label: "Gate", cat: "control" },
+  { id: "summarize", label: "Summarize", cat: "synthesis" },
+  { id: "draft", label: "Draft", cat: "synthesis" },
+  { id: "send", label: "Send", cat: "action" },
+];
+
+// Geometry
+const NW = 120;
+const NH = 58;
+const BAR = 5;
+const MX = 14;
+const GAP = 20;
+const Y = 86;
+const CY = Y + NH / 2;
+const VW = MX * 2 + NODES.length * NW + (NODES.length - 1) * GAP;
+const VH = 200;
+
+const nodes = NODES.map((n, i) => {
+  const x = MX + i * (NW + GAP);
+  return { ...n, x, cx: x + NW / 2 };
+});
+
+// Straight horizontal edges (a bezier between equal-y endpoints is a line).
+const edges = nodes.slice(0, -1).map((n, i) => ({
+  id: `e-${i}`,
+  from: n.id,
+  d: `M ${n.x + NW} ${CY} C ${n.x + NW + GAP * 0.5} ${CY}, ${nodes[i + 1].x - GAP * 0.5} ${CY}, ${nodes[i + 1].x} ${CY}`,
+}));
+
+const draft = nodes.find((n) => n.id === "draft")!;
+const extract = nodes.find((n) => n.id === "extract")!;
+// Provenance flourish: Draft output traces back to its Extract Insights source.
+const provD = `M ${draft.cx} ${Y} C ${draft.cx} ${Y - 54}, ${extract.cx} ${Y - 54}, ${extract.cx} ${Y}`;
+---
+
+<div class="hero-flow" data-flow>
+  <svg
+    viewBox={`0 0 ${VW} ${VH}`}
+    role="img"
+    aria-label="An Arachne flow running: Schedule, Regularize, Extract Insights, a human review Gate, Summarize, Draft, and Send."
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <defs>
+      <marker
+        id="arrow"
+        viewBox="0 0 8 8"
+        refX="6"
+        refY="4"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse"
+      >
+        <path d="M1,1 L6,4 L1,7" fill="none" stroke="currentColor" stroke-width="1.4" />
+      </marker>
+    </defs>
+
+    <!-- provenance flourish (hidden until Draft completes) -->
+    <path class="prov" d={provD} />
+
+    <!-- edges -->
+    {edges.map((e) => <path class="edge" id={e.id} data-from={e.from} d={e.d} marker-end="url(#arrow)" />)}
+
+    <!-- nodes -->
+    {
+      nodes.map((n) => (
+        <g class="node" id={`n-${n.id}`} data-node={n.id} style={`--tint: ${categoryVar[n.cat]}`}>
+          <rect class="ring" x={n.x - 4} y={Y - 4} width={NW + 8} height={NH + 8} rx="11" />
+          <rect class="body" x={n.x} y={Y} width={NW} height={NH} rx="8" />
+          <rect class="bar" x={n.x} y={Y} width={NW} height={BAR + 4} rx="8" />
+          <rect class="bar-clip" x={n.x} y={Y + BAR} width={NW} height={6} />
+          <text class="label" x={n.cx} y={Y + 28} text-anchor="middle">{n.label}</text>
+          <text class="status" x={n.cx} y={Y + 45} text-anchor="middle">IDLE</text>
+          {n.id === "gate" && (
+            <path class="tick" d={`M ${n.cx - 7} ${Y + 44} l 4 4 l 8 -9`} />
+          )}
+        </g>
+      ))
+    }
+  </svg>
+</div>
+
+<style>
+  .hero-flow {
+    width: 100%;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    color: var(--border-1); /* arrowhead currentColor */
+    overflow: visible;
+  }
+
+  .body {
+    fill: var(--bg-2);
+    stroke: var(--border-1);
+    stroke-width: 1;
+  }
+  .bar {
+    fill: var(--tint);
+    opacity: 0.85;
+  }
+  /* square off the bar's bottom so only the top corners are rounded */
+  .bar-clip {
+    fill: color-mix(in srgb, var(--tint) 16%, var(--bg-2));
+  }
+  .label {
+    fill: var(--fg-0);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status {
+    fill: var(--fg-3);
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+
+  .edge {
+    fill: none;
+    stroke: var(--border-0);
+    stroke-width: 1.4;
+    transition: stroke var(--t-slow);
+  }
+  .edge.lit {
+    stroke: color-mix(in srgb, var(--accent) 60%, var(--border-1));
+  }
+  .edge.flowing {
+    stroke: var(--accent-strong);
+    stroke-dasharray: 5 7;
+    animation: flow 0.7s linear infinite;
+  }
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -12;
+    }
+  }
+
+  .ring {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    opacity: 0;
+    transition: opacity var(--t-medium);
+  }
+  .node.needs-input .ring {
+    opacity: 0.9;
+    animation: ringpulse 1.6s ease-in-out infinite;
+  }
+  @keyframes ringpulse {
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  /* running: bar glows + dips */
+  .node.running .bar {
+    opacity: 1;
+    animation: barpulse 1.4s ease-in-out infinite;
+  }
+  .node.running .body {
+    stroke: color-mix(in srgb, var(--accent-strong) 50%, var(--border-1));
+  }
+  @keyframes barpulse {
+    50% {
+      opacity: 0.45;
+    }
+  }
+  .node.running .status {
+    fill: var(--accent-strong);
+  }
+  .node.completed .status {
+    fill: var(--success);
+  }
+  .node.completed .body {
+    stroke: color-mix(in srgb, var(--success) 35%, var(--border-1));
+  }
+  .node.needs-input .status {
+    fill: var(--conf-needs-input);
+  }
+
+  .tick {
+    fill: none;
+    stroke: var(--success);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity var(--t-fast);
+  }
+  .node.approved .tick {
+    opacity: 1;
+  }
+  .node.approved .status {
+    opacity: 0;
+  }
+
+  .prov {
+    fill: none;
+    stroke: var(--cat-extraction);
+    stroke-width: 1.2;
+    stroke-dasharray: 3 4;
+    opacity: 0;
+  }
+  .prov.show {
+    animation: provflash 1.6s ease-out;
+  }
+  @keyframes provflash {
+    0% {
+      opacity: 0;
+    }
+    25% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Reduced motion: the script freezes the diagram on all-completed; kill
+     any residual keyframe animation so nothing pulses. */
+  @media (prefers-reduced-motion: reduce) {
+    .edge,
+    .ring,
+    .bar,
+    .prov {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  // Autonomous, non-interactive timeline. No pointer handling, no input.
+  const root = document.querySelector<HTMLElement>("[data-flow]");
+  if (root) {
+    const node = (id: string) => root.querySelector<SVGGElement>(`[data-node="${id}"]`);
+    const status = (id: string) => node(id)?.querySelector<SVGTextElement>(".status");
+    const outEdge = (id: string) => root.querySelector<SVGPathElement>(`.edge[data-from="${id}"]`);
+    const ORDER = ["schedule", "regularize", "extract", "gate", "summarize", "draft", "send"];
+
+    const set = (id: string, state: string, label: string) => {
+      const n = node(id);
+      if (!n) return;
+      n.classList.remove("running", "completed", "needs-input", "approved");
+      if (state) n.classList.add(state);
+      const s = status(id);
+      if (s) s.textContent = label;
+    };
+    const lightEdge = (id: string, flowing: boolean) => {
+      const e = outEdge(id);
+      if (!e) return;
+      e.classList.toggle("flowing", flowing);
+      e.classList.toggle("lit", !flowing);
+    };
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const reset = () => {
+      ORDER.forEach((id) => set(id, "", "IDLE"));
+      root.querySelectorAll(".edge").forEach((e) => e.classList.remove("lit", "flowing"));
+      root.querySelector(".prov")?.classList.remove("show");
+    };
+
+    const advance = async (id: string, ms: number) => {
+      set(id, "running", "RUNNING");
+      await sleep(ms);
+      set(id, "completed", "COMPLETED");
+      lightEdge(id, true); // pulse travels the outgoing edge
+      await sleep(550);
+      lightEdge(id, false); // edge settles to "lit"
+    };
+
+    const gate = async (ms: number) => {
+      set("gate", "needs-input", "NEEDS-INPUT"); // the beat: machine waits for a person
+      await sleep(ms);
+      node("gate")?.classList.add("approved"); // a person approves
+      await sleep(500);
+      set("gate", "completed", "COMPLETED");
+      lightEdge("gate", true);
+      await sleep(550);
+      lightEdge("gate", false);
+    };
+
+    if (reduce) {
+      ORDER.forEach((id, i) => {
+        set(id, "completed", "COMPLETED");
+        if (i < ORDER.length - 1) outEdge(id)?.classList.add("lit");
+      });
+    } else {
+      (async () => {
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+          reset();
+          await sleep(500);
+          await advance("schedule", 1100);
+          await advance("regularize", 1000);
+          await advance("extract", 1200);
+          await gate(2200);
+          await advance("summarize", 1100);
+          await advance("draft", 1100);
+          root.querySelector(".prov")?.classList.add("show"); // provenance flourish
+          await advance("send", 1000);
+          await sleep(1700); // settle on all-completed
+        }
+      })();
+    }
+  }
+</script>

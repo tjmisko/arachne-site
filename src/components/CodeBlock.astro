@@ -1,0 +1,43 @@
+---
+interface Props {
+  /** Optional artifact label, e.g. `flow.json` or `arachne run`. */
+  file?: string;
+}
+const { file } = Astro.props;
+---
+
+<figure class="code">
+  {file && <figcaption class="file">{file}</figcaption>}
+  <pre><code><slot /></code></pre>
+</figure>
+
+<style>
+  .code {
+    margin: 0;
+    border: 1px solid var(--border-0);
+    border-radius: var(--r-8);
+    background: var(--bg-2);
+    overflow: hidden;
+  }
+  .file {
+    font-family: var(--font-mono);
+    font-size: var(--fs-10);
+    color: var(--fg-2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    padding: var(--s-8) var(--s-12);
+    border-bottom: 1px solid var(--border-0);
+    background: var(--bg-1);
+  }
+  pre {
+    margin: 0;
+    padding: var(--s-16);
+    overflow-x: auto;
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    color: var(--fg-1);
+    line-height: var(--lh-loose);
+  }
+</style>

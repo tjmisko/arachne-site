@@ -1,0 +1,46 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+const { eyebrow, title } = Astro.props;
+---
+
+<article class="pillar">
+  <span class="eyebrow">{eyebrow}</span>
+  <h3>{title}</h3>
+  <p><slot /></p>
+</article>
+
+<style>
+  .pillar {
+    border: 1px solid var(--border-0);
+    border-radius: var(--r-8);
+    background: var(--bg-1);
+    padding: var(--s-24);
+    position: relative;
+    overflow: hidden;
+  }
+  .pillar::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--accent) 55%, transparent),
+      transparent
+    );
+  }
+  .eyebrow {
+    color: var(--fg-2);
+  }
+  h3 {
+    margin: var(--s-12) 0 var(--s-8);
+  }
+  p {
+    color: var(--fg-2);
+    font-size: var(--ms-small);
+  }
+</style>

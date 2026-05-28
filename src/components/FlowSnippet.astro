@@ -1,0 +1,75 @@
+---
+import { categoryVar, type BlockCategory } from "../lib/flow";
+
+interface Node {
+  label: string;
+  category: BlockCategory;
+}
+interface Props {
+  nodes: Node[];
+  caption?: string;
+}
+const { nodes, caption } = Astro.props;
+---
+
+<figure class="flow">
+  <div class="track" role="img" aria-label={caption ?? "Flow diagram"}>
+    {
+      nodes.map((node, i) => (
+        <>
+          {i > 0 && <span class="edge" aria-hidden="true" />}
+          <span class="node" style={`--tint: ${categoryVar[node.category]}`}>
+            {node.label}
+          </span>
+        </>
+      ))
+    }
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .flow {
+    margin: 0;
+  }
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    row-gap: var(--s-12);
+  }
+  .node {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    font-weight: 700;
+    color: var(--fg-0);
+    background: color-mix(in srgb, var(--tint) 14%, var(--bg-2));
+    border: 1px solid var(--border-1);
+    border-top: 2px solid var(--tint);
+    border-radius: var(--r-6);
+    padding: var(--s-8) var(--s-12);
+    white-space: nowrap;
+  }
+  .edge {
+    flex: none;
+    width: 22px;
+    height: 1px;
+    background: var(--border-1);
+    position: relative;
+  }
+  .edge::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 4px solid var(--border-1);
+    border-block: 3px solid transparent;
+  }
+  figcaption {
+    margin-top: var(--s-12);
+    font-size: var(--ms-small);
+    color: var(--fg-2);
+  }
+</style>

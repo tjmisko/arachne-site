@@ -1,0 +1,16 @@
+---
+interface Props {
+  as?: "p" | "span" | "h2";
+}
+const { as = "p" }: Props = Astro.props;
+const Tag = as;
+---
+
+<Tag class="eyebrow"><slot /></Tag>
+
+<style>
+  .eyebrow {
+    display: block;
+    margin: 0 0 var(--s-12);
+  }
+</style>

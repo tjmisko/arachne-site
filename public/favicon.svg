@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="7" fill="#0b0d10" />
+  <g stroke="#8a9ab2" stroke-width="1.1" stroke-linecap="round">
+    <!-- radial threads -->
+    <path d="M16 16 V4 M16 16 V28 M16 16 H4 M16 16 H28 M16 16 L7 7 M16 16 L25 25 M16 16 L25 7 M16 16 L7 25" opacity="0.45" />
+    <!-- web rings -->
+    <circle cx="16" cy="16" r="5" opacity="0.9" />
+    <circle cx="16" cy="16" r="9.5" opacity="0.5" />
+  </g>
+  <circle cx="16" cy="16" r="1.6" fill="#b0bccc" />
+</svg>
