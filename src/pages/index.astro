@@ -57,14 +57,15 @@ const notList = [
     <div class="container">
       <Eyebrow>Automation for knowledge work</Eyebrow>
       <h1 class="display">
-        See exactly what your automation does — before it runs on anything that
-        matters.
+        See exactly what your automation does — once — so you don't have to
+        check every run.
       </h1>
       <p class="lead measure">
         Arachne is a visual canvas for building, running, and auditing
         information-processing pipelines. A flow is a visible map of your
         process — every step declared, every output traceable, the whole thing
-        inspectable before it touches production data.
+        inspectable before it touches production data. The trust you earn up
+        front carries to every run.
       </p>
       <div class="actions">
         <Button href={repoUrl} variant="primary">Get started</Button>
@@ -79,20 +80,20 @@ const notList = [
   <!-- THE GAP -->
   <section class="section">
     <div class="container measure">
-      <Eyebrow>The gap almost no one has crossed</Eyebrow>
-      <h2>"Using AI" usually means a browser tab and copy-paste.</h2>
+      <Eyebrow>Everyone runs agents. No one can trust them.</Eyebrow>
+      <h2>An agent run is a trace. Trust needs a process.</h2>
       <p class="stack-p">
-        The history lives in one person's account and disappears when they
-        leave. It isn't reproducible, can't be tested systematically, and
-        encodes individual interactions rather than process. Agentic execution
-        doesn't separate the data plane from the execution plane — there is no
-        declared program to inspect, only a trace of what the agent happened to
-        do.
+        A trace is just a record of what the agent happened to do this time —
+        nothing to inspect before it runs, nothing to test after. It isn't
+        reproducible, it can't be checked systematically, and the data plane and
+        execution plane are tangled together. You're left hoping it got it
+        right.
       </p>
       <p>
-        Arachne makes errors legible and fixes durable. A change is visible in
-        the JSON, testable on the canvas before it touches production data, and
-        legible in the version history. You close the gap with confidence.
+        The canvas is where you specify the process instead. It isn't a window
+        onto a run you squint at afterward — it is the program itself: visible in
+        the JSON, testable before it touches production data, legible in the
+        version history. You verify a run. You trust a flow.
       </p>
     </div>
   </section>
@@ -119,6 +120,13 @@ const notList = [
           accountable for the outcome, its output is opaque. Arachne flips the
           roles. The canvas agent drafts a first-pass flow; the canvas is how
           you verify it. The agent generates; the human verifies; the flow runs.
+        </p>
+        <p class="stack-p">
+          You verify the process, not the output of every run. The aim isn't to
+          stop checking — it's to check on purpose: deliberately, where a step
+          needs a human; retrospectively, when a result looks wrong and you trace
+          it to the block that produced it; and less over time, as each fix
+          hardens the flow and earns back the trust to let it run unwatched.
         </p>
         <p>
           Humans are first-class participants, not edge cases. A Gate pauses

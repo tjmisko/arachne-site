@@ -47,16 +47,29 @@ const description =
         half that decides what happens when the standard case does not apply.
       </p>
 
-      <h2>Verifiability is necessary but not sufficient</h2>
+      <h2>Trust is checking placed on purpose</h2>
       <p>
         Being able to check an output after the fact does not, by itself, make a
         process trustworthy. Trust also requires knowing the process is stable,
         owned, and the same tomorrow as it was today.
       </p>
       <p>
-        A visible, declared flow provides that. A runtime trace of an agent's
-        improvisation does not — it tells you what happened once, not what will
-        happen again.
+        The point of automation is not to check less for its own sake, but to
+        check where checking earns its keep. A system you must audit output by
+        output has not automated the work — it has moved the labor from doing to
+        reviewing. A system you never check is not trustworthy either; it is just
+        unexamined. The goal is to put checking where it belongs and remove it
+        where it no longer does.
+      </p>
+      <p>
+        A declared flow lets you place it deliberately. You stop at a Gate where
+        a judgment is yours to make. You trace a wrong result back through
+        provenance to the step that produced it. And as each fix hardens the
+        process, the checks you needed early fall away — you converge on
+        inspecting only what genuinely cannot be delegated. A runtime trace of
+        an agent's improvisation gives you none of this: it tells you what
+        happened once, not what will happen again, so it leaves you checking
+        everything, every time.
       </p>
 
       <h2>Data control is architectural, not a policy</h2>
