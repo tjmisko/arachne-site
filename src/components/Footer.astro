@@ -8,7 +8,7 @@ const docsUrl = "https://github.com/";
 <footer>
   <div class="container inner">
     <div class="brand">
-      <span class="mark" aria-hidden="true"></span>
+      <img class="mark" src="/logo.svg" alt="" aria-hidden="true" width="24" height="24" />
       <span class="wm">Arachne</span>
     </div>
     <p class="tagline">
@@ -20,7 +20,7 @@ const docsUrl = "https://github.com/";
       <div class="col">
         <span class="eyebrow">Product</span>
         <a href="/how-it-works">How it works</a>
-        <a href="/ownership">Ownership</a>
+        <a href="/self-hosting">Self-hosting</a>
       </div>
       <div class="col">
         <span class="eyebrow">Read</span>
@@ -68,10 +68,9 @@ const docsUrl = "https://github.com/";
     font-size: var(--fs-14);
   }
   .mark {
-    width: 12px;
-    height: 12px;
-    border-radius: var(--r-50);
-    border: 1px solid var(--accent);
+    display: block;
+    width: 24px;
+    height: 24px;
   }
   .tagline {
     max-width: var(--measure-prose);

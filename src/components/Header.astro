@@ -4,7 +4,7 @@ import Button from "./Button.astro";
 const nav = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/philosophy", label: "Philosophy" },
-  { href: "/ownership", label: "Ownership" },
+  { href: "/self-hosting", label: "Self-hosting" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -20,7 +20,7 @@ const repoUrl = "https://github.com/";
 <header>
   <div class="container bar">
     <a href="/" class="wordmark-link" aria-label="Arachne home">
-      <span class="mark" aria-hidden="true"></span>
+      <img class="mark" src="/logo.svg" alt="" aria-hidden="true" width="26" height="26" />
       <span class="wm">Arachne</span>
     </a>
     <nav aria-label="Primary">
@@ -69,13 +69,10 @@ const repoUrl = "https://github.com/";
     color: var(--accent-strong);
   }
   .mark {
-    width: 13px;
-    height: 13px;
-    border-radius: var(--r-50);
-    border: 1px solid var(--accent);
-    box-shadow:
-      0 0 0 3px rgba(138, 154, 178, 0.12),
-      inset 0 0 0 3px var(--bg-1);
+    display: block;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
   }
   nav {
     display: flex;

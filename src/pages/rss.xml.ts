@@ -13,7 +13,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: "Arachne",
     description:
-      "Essays, use cases, and notes on building visible, safe, auditable automation for knowledge work.",
+      "Essays, use cases, and notes on building visible, bounded, auditable automation for knowledge work.",
     site: context.site ?? "https://arachne.example.com",
     items: posts.map((post) => ({
       title: post.data.title,
