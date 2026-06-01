@@ -11,7 +11,7 @@ interface Props {
 }
 
 const {
-  title = "Arachne — visible, safe, auditable automation for knowledge work",
+  title = "Arachne — visible, bounded, auditable automation for knowledge work",
   description = "A visual canvas for building, running, and auditing information-processing pipelines. The agent builds the flow. You verify it. Then it runs.",
 } = Astro.props;
 
@@ -25,7 +25,10 @@ const ogImage = new URL("/og.png", Astro.site).href;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b0d10" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Page is already dark: declare the scheme and tell Dark Reader to stand down. -->
+    <meta name="color-scheme" content="dark" />
+    <meta name="darkreader-lock" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="canonical" href={canonical} />
     <link
       rel="alternate"

@@ -37,4 +37,4 @@ This is the canonical shape: a sequential flow with a human-in-the-loop checkpoi
 
 ## Start from this template
 
-Open the **Analyst Weekly Memo** template and point it at your own sources. You can harden it incrementally: tighten the schema on `Extract Insights`, add a second `Gate` before `Send`, or swap the output action for your channel of choice.
+Open the **Analyst Weekly Memo** template and point it at your own sources. You can refine it incrementally: tighten the schema on `Extract Insights`, add a second `Gate` before `Send`, or swap the output action for your channel of choice.

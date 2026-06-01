@@ -16,9 +16,9 @@ const pillars = [
     body: "Every step declared, every connection explicit, the whole flow specified before it runs. You read a map, not a transcript.",
   },
   {
-    eyebrow: "Safe",
-    title: "Test before it touches production",
-    body: "Run it on real data, watch execution state move through the graph, and put a human in the loop wherever a judgment isn't delegable.",
+    eyebrow: "Bounded",
+    title: "Hard to run off the road",
+    body: "Each step runs isolated, with a narrow job and only the information you hand it — so a run has few places it can go wrong. Run it on real data, watch execution move through the graph, and keep a human in the loop wherever a judgment isn't delegable.",
   },
   {
     eyebrow: "Auditable",
@@ -47,7 +47,7 @@ const notList = [
   ["Not a low-code app builder", "Arachne builds automation flows, not user-facing applications."],
   ["Not a storage system", "It processes and routes data; durable storage is a connector target."],
   ["Not a replacement for judgment", "It routes judgment to the right person at the right time."],
-  ["Not a scripting environment", "Custom code is an escape hatch requiring explicit trust, not the default path."],
+  ["Not code-first", "You wire together blocks that already do most of the work. Custom code is there when you want it — easy to reach, never required."],
 ];
 ---
 
@@ -57,15 +57,15 @@ const notList = [
     <div class="container">
       <Eyebrow>Automation for knowledge work</Eyebrow>
       <h1 class="display">
-        See exactly what your automation does — once — so you don't have to
-        check every run.
+        Delegate the by-the-book work to agents — and see exactly what they
+        do.
       </h1>
       <p class="lead measure">
-        Arachne is a visual canvas for building, running, and auditing
-        information-processing pipelines. A flow is a visible map of your
-        process — every step declared, every output traceable, the whole thing
-        inspectable before it touches production data. The trust you earn up
-        front carries to every run.
+        Arachne is two things at once: a visual canvas you build on, and a
+        sandboxed runtime that executes it — independent steps running in
+        parallel, each one isolated. Hand routine knowledge work to agents and
+        see exactly what each one does. Trust the process, not the run: verify
+        it once, and you don't have to re-check every run.
       </p>
       <div class="actions">
         <Button href={repoUrl} variant="primary">Get started</Button>
@@ -80,20 +80,21 @@ const notList = [
   <!-- THE GAP -->
   <section class="section">
     <div class="container measure">
-      <Eyebrow>Everyone runs agents. No one can trust them.</Eyebrow>
-      <h2>An agent run is a trace. Trust needs a process.</h2>
+      <Eyebrow>Run agents you can't trust?</Eyebrow>
+      <h2>Trust the process, not the implementer.</h2>
       <p class="stack-p">
-        A trace is just a record of what the agent happened to do this time —
-        nothing to inspect before it runs, nothing to test after. It isn't
-        reproducible, it can't be checked systematically, and the data plane and
-        execution plane are tangled together. You're left hoping it got it
-        right.
+        An agent run is a trace — a record of what the implementer happened to
+        do this time. Nothing to inspect before it runs, nothing to test after.
+        It isn't reproducible, it can't be checked systematically, and the data
+        and the logic are tangled together. You're left hoping it got it right.
       </p>
       <p>
-        The canvas is where you specify the process instead. It isn't a window
-        onto a run you squint at afterward — it is the program itself: visible in
-        the JSON, testable before it touches production data, legible in the
-        version history. You verify a run. You trust a flow.
+        So you don't trust the implementer. You bound it — a narrow job, only
+        the information it needs — and you trust the process it runs inside. The
+        canvas is where that process is specified and read: visible in the JSON,
+        testable before it touches real data, legible in the version history. No
+        single step has to carry the trust; the whole, laid out where you can
+        see it, does. You verify a run. You trust a flow.
       </p>
     </div>
   </section>
@@ -101,7 +102,7 @@ const notList = [
   <!-- PILLARS -->
   <section class="section">
     <div class="container">
-      <Eyebrow>Visible · Safe · Auditable</Eyebrow>
+      <Eyebrow>Visible · Bounded · Auditable</Eyebrow>
       <h2>Built around what automation gets dangerously wrong, quietly.</h2>
       <div class="grid-3">
         {pillars.map((p) => <Pillar eyebrow={p.eyebrow} title={p.title}>{p.body}</Pillar>)}
@@ -116,17 +117,30 @@ const notList = [
         <Eyebrow>The inversion</Eyebrow>
         <h2>The agent builds the flow. You verify it. Then it runs.</h2>
         <p class="stack-p">
-          A coding agent can write the automation — but for the person
-          accountable for the outcome, its output is opaque. Arachne flips the
-          roles. The canvas agent drafts a first-pass flow; the canvas is how
-          you verify it. The agent generates; the human verifies; the flow runs.
+          Coding agents are genuinely good at one thing: building. The mistake
+          is handing an agent a hazily specified process and trusting it to
+          execute — asking it to be reliable exactly where it isn't. Arachne
+          flips the roles. The agent does what it's good at — it builds the
+          flow, the way you'd otherwise pay an engineer to — and you do what
+          only you can: decide whether the process is right. The agent
+          generates; you verify; the flow runs.
         </p>
         <p class="stack-p">
-          You verify the process, not the output of every run. The aim isn't to
-          stop checking — it's to check on purpose: deliberately, where a step
-          needs a human; retrospectively, when a result looks wrong and you trace
-          it to the block that produced it; and less over time, as each fix
-          hardens the flow and earns back the trust to let it run unwatched.
+          You rarely know the exact process up front, but you know it when you
+          see it. So the real loop is reactive: the agent proposes, you respond,
+          it adjusts. That loop is badly captured today — drive an agent from a
+          command line and all you get back is a transcript, a record of what it
+          happened to do, not a view of whether the process is right. The canvas
+          captures the loop instead: the agent's work is laid out where you can
+          read it, react to it, and change it — directly, or just by asking.
+        </p>
+        <p class="stack-p">
+          Work however the task wants: delegate a whole flow and verify it, or
+          build it block by block alongside the agent. Either way you verify the
+          process, not the output of every run — checking on purpose where a
+          step needs a human, retrospectively when a result looks wrong and you
+          trace it to the block that produced it, and less over time as the
+          process learns and earns the trust to let it run unwatched.
         </p>
         <p>
           Humans are first-class participants, not edge cases. A Gate pauses
@@ -140,15 +154,34 @@ const notList = [
     </div>
   </section>
 
+  <!-- THE WEDGE -->
+  <section class="section">
+    <div class="container measure">
+      <Eyebrow>What's different</Eyebrow>
+      <h2>Plenty of tools draw the pipeline. Arachne shows the judgment inside it.</h2>
+      <p class="stack-p">
+        A visual canvas is table stakes — every automation tool has one, and
+        they all show you the same thing: the plumbing, what connects to what.
+        What they leave as a black box is the step where an agent made a call.
+        Arachne makes that step legible — what it saw, what it claimed, and the
+        source behind every claim — so the canvas reads as an audit trail for
+        the person accountable for the outcome, not just a wiring diagram for
+        whoever built it.
+      </p>
+    </div>
+  </section>
+
   <!-- WHO IT'S FOR -->
   <section class="section">
     <div class="container">
       <Eyebrow>Who it's for</Eyebrow>
-      <h2>The moment a flow becomes important enough to own.</h2>
+      <h2>If a person is following a script to move information, that should run itself.</h2>
       <p class="measure stack-p">
-        Not a sector — a moment of organizational maturity: when an information
-        flow is consistent enough to formalize and high-volume enough to
-        automate.
+        By-the-book work — the same steps, the same rules, applied again and
+        again. Automatable in principle, but never quite worth an engineer's
+        time to build and maintain, so it stays manual. That's the work Arachne
+        is for: consistent enough to formalize, high-volume enough to automate,
+        and finally cheap enough to bother.
       </p>
       <dl class="grid-3 sectors">
         {sectors.map(([term, desc]) => (

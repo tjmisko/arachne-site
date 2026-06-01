@@ -17,7 +17,7 @@ const gateFlow: { label: string; category: BlockCategory }[] = [
 
 <BaseLayout
   title="How it works — Arachne"
-  description="Sketch a rough pipeline, run it on real data, and harden it as the process reveals itself. Blocks declare their effects, files carry provenance, and humans hold the steps that aren't delegable."
+  description="Sketch a rough pipeline, run it on real data, and refine it as the process reveals itself. Blocks declare their effects, files carry provenance, and humans hold the steps that aren't delegable."
 >
   <!-- HEADER -->
   <section class="section">
@@ -25,7 +25,7 @@ const gateFlow: { label: string; category: BlockCategory }[] = [
       <Eyebrow>How it works</Eyebrow>
       <h1>You build the flow by running it.</h1>
       <p class="lead measure">
-        A flow starts as a sketch and hardens into an audited workflow. Blocks
+        A flow starts as a sketch and matures into an audited workflow. Blocks
         declare what they consume, emit, and change; every file carries a
         provenance chain back to source; and the steps a person must own pause
         for that person. The same tool runs a first draft and the mature
@@ -45,10 +45,15 @@ const gateFlow: { label: string; category: BlockCategory }[] = [
         to a teammate. You don't have to specify everything before you start.
       </p>
       <p class="stack-p">
-        You harden it incrementally, as the process reveals itself. Add schema
+        You refine it incrementally, as the process reveals itself. Add schema
         enforcement where you've learned the data's shape. Add a Gate where the
         naive automation keeps getting it wrong. Replace a sketch block with a
         fully typed, validated block once you know exactly what it should do.
+      </p>
+      <p class="stack-p">
+        What you are really doing is writing down a process that used to live
+        only in someone's head. The flow remembers it — even though the agent
+        that runs each step does not.
       </p>
       <p>
         The same tool runs a first-pass pipeline for a two-person team and a
@@ -140,10 +145,11 @@ const gateFlow: { label: string; category: BlockCategory }[] = [
         re-reading a transcript.
       </p>
       <p>
-        You identify the step that needs to change, make a targeted fix, verify
-        it on the canvas, and deploy it knowing it applies consistently to every
-        future run. The change is legible in the version history — what changed,
-        when, and why.
+        You — or an agent working alongside you — identify the step that needs
+        to change, propose a targeted fix, verify it on the canvas, and deploy
+        it knowing it applies consistently to every future run. The change is
+        legible in the version history — what changed, when, and why. The model
+        never had to get better; the process did.
       </p>
     </div>
   </section>
@@ -151,7 +157,7 @@ const gateFlow: { label: string; category: BlockCategory }[] = [
   <!-- CLOSE -->
   <section class="section">
     <div class="container measure">
-      <Button href="/ownership" variant="ghost">Read about ownership</Button>
+      <Button href="/self-hosting" variant="ghost">Read about self-hosting</Button>
     </div>
   </section>
 </BaseLayout>
