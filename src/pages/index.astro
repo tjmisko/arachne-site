@@ -74,6 +74,7 @@ const notList = [
     </div>
     <div class="container hero-canvas">
       <Hero />
+      <p class="desktop-note">A desktop canvas — best explored on a big screen.</p>
     </div>
   </section>
 
@@ -232,9 +233,22 @@ const notList = [
   h1.display {
     margin-top: var(--s-16);
     max-width: 20ch;
+    /* Long tokens (e.g. "by-the-book") must never push past the viewport on
+       narrow phones — break + hyphenate before they overflow. */
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
   .lead {
     margin-top: var(--s-24);
+  }
+  /* Mobile-only: the product is a desktop canvas. Land the pitch, signal where
+     it lives — not a funnel (DESIGN.md CTA stance). */
+  .desktop-note {
+    display: none;
+    margin-top: var(--s-16);
+    font-family: var(--font-mono);
+    font-size: var(--ms-small);
+    color: var(--fg-3);
   }
   .actions {
     display: flex;
@@ -321,6 +335,17 @@ const notList = [
     .grid-3,
     .split {
       grid-template-columns: 1fr;
+    }
+    .desktop-note {
+      display: block;
+    }
+  }
+
+  /* Small phones: ease the display down a touch so the headline never right-cuts
+     the lead and dots below it. */
+  @media (max-width: 480px) {
+    h1.display {
+      font-size: clamp(2rem, 1rem + 6vw, 2.55rem);
     }
   }
 </style>

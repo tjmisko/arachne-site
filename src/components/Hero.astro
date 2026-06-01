@@ -66,7 +66,7 @@ const firstId = ROTATION[0].id;
   <div class="hero-stage-wrap">
     {
       LAYOUTS.map(({ flow, vw, vh, nodes, edges }) => (
-        <div class="hero-stage" data-flow={flow.id} hidden={flow.id !== firstId}>
+        <div class="hero-stage" data-flow={flow.id} style={`--vw: ${vw}`} hidden={flow.id !== firstId}>
           <svg viewBox={`0 0 ${vw} ${vh}`} role="img" aria-label={flow.aria} preserveAspectRatio="xMidYMid meet">
             <defs>
               <marker
@@ -137,6 +137,9 @@ const firstId = ROTATION[0].id;
 <style>
   .hero-rot {
     width: 100%;
+    /* Mobile node scale: rendered node ≈ NW × this. 0.9 ≈ 108px — legible mono
+       labels while fitting the two-lane fan in portrait. Tune here. */
+    --node-scale: 0.9;
   }
   .hero-stage-wrap {
     width: 100%;
@@ -145,6 +148,7 @@ const firstId = ROTATION[0].id;
     display: none;
   }
   svg {
+    display: block;
     width: 100%;
     height: auto;
     color: var(--border-1); /* arrowhead currentColor */
@@ -343,6 +347,61 @@ const firstId = ROTATION[0].id;
       text-align: left;
       width: 100%;
     }
+
+    /* Mobile hero = horizontal scroll-follow window. Keep nodes at a legible
+       fixed size (wider than the viewport) and let the flow overflow, instead
+       of shrinking the whole DAG to fit. The visible stage is the scroll
+       viewport; the SVG width is derived from its own viewBox (--vw). The
+       script auto-pans this container to track the running stage. LTR is
+       load-bearing — never stack the flow vertically. */
+    .hero-stage-wrap {
+      position: relative;
+    }
+    .hero-stage {
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* edge fades carry the scroll affordance */
+    }
+    .hero-stage::-webkit-scrollbar {
+      display: none;
+    }
+    .hero-stage svg {
+      /* Override the global `svg { max-width: 100% }` reset so the flow can
+         exceed the viewport and scroll, instead of shrinking to fit. */
+      max-width: none;
+      width: calc(var(--vw) * var(--node-scale) * 1px);
+    }
+
+    /* Edge fades hint there's more flow off-screen; the script toggles
+       can-left / can-right from the live scroll position. */
+    .hero-stage-wrap::before,
+    .hero-stage-wrap::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 32px;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity var(--t-medium);
+    }
+    .hero-stage-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg-0), transparent);
+    }
+    .hero-stage-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg-0), transparent);
+    }
+    .hero-stage-wrap.can-left::before {
+      opacity: 1;
+    }
+    .hero-stage-wrap.can-right::after {
+      opacity: 1;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -388,6 +447,51 @@ const firstId = ROTATION[0].id;
 
     const nodeEl = (flowEl: HTMLElement, id: string) => flowEl.querySelector<SVGGElement>(`[data-node="${id}"]`);
 
+    // ── Mobile scroll-follow window ───────────────────────────────────────
+    // At ≤860px each stage is a horizontal scroll viewport (see styles): nodes
+    // stay legible and the flow overflows. Pan the viewport to keep the running
+    // stage centered, reinforcing the left-to-right reading. All no-ops on
+    // desktop, where the container isn't scrollable.
+    const stageWrap = root.querySelector<HTMLElement>(".hero-stage-wrap");
+    const FOLLOW_COOLDOWN = 4000;
+    let lastUserScroll = -Infinity;
+    const userScrolling = () => performance.now() - lastUserScroll < FOLLOW_COOLDOWN;
+    const scrollable = (el: HTMLElement) => el.scrollWidth - el.clientWidth > 1;
+
+    const updateFades = (flowEl: HTMLElement) => {
+      if (!stageWrap) return;
+      const max = flowEl.scrollWidth - flowEl.clientWidth;
+      stageWrap.classList.toggle("can-left", max > 1 && flowEl.scrollLeft > 1);
+      stageWrap.classList.toggle("can-right", max > 1 && flowEl.scrollLeft < max - 1);
+    };
+
+    const followColumn = (flowEl: HTMLElement, id: string) => {
+      if (reduce || !scrollable(flowEl) || userScrolling()) return;
+      const node = nodeEl(flowEl, id);
+      if (!node) return;
+      // SVG children have no offsetLeft — measure against the container instead.
+      const cRect = flowEl.getBoundingClientRect();
+      const nRect = node.getBoundingClientRect();
+      const max = flowEl.scrollWidth - flowEl.clientWidth;
+      const target = flowEl.scrollLeft + (nRect.left - cRect.left) + nRect.width / 2 - flowEl.clientWidth / 2;
+      flowEl.scrollTo({ left: Math.max(0, Math.min(max, target)), behavior: "smooth" });
+    };
+
+    // Genuine user intent (these don't fire from a programmatic scrollTo) pauses
+    // auto-follow briefly so a manual swipe isn't fought; the scroll listener
+    // keeps the edge fades in sync with the live position.
+    const markUser = () => {
+      lastUserScroll = performance.now();
+    };
+    ["pointerdown", "touchstart", "wheel"].forEach((ev) =>
+      stageWrap?.addEventListener(ev, markUser, { passive: true }),
+    );
+    stages.forEach((s) => s.addEventListener("scroll", () => updateFades(s), { passive: true }));
+    window.addEventListener("resize", () => {
+      const visible = stages.find((s) => !s.hidden);
+      if (visible) updateFades(visible);
+    });
+
     const setNode = (flowEl: HTMLElement, id: string, state: string, label: string) => {
       const n = nodeEl(flowEl, id);
       if (!n) return;
@@ -408,6 +512,7 @@ const firstId = ROTATION[0].id;
       const n = nodeEl(flowEl, id);
       const err = n?.getAttribute("data-error");
       setNode(flowEl, id, "running", "RUNNING");
+      followColumn(flowEl, id);
       if (err) {
         await sleep(ms * 0.5);
         const s = n!.querySelector<SVGTextElement>(".status");
@@ -424,6 +529,7 @@ const firstId = ROTATION[0].id;
 
     const gate = async (flowEl: HTMLElement, id: string, ms: number) => {
       setNode(flowEl, id, "needs-input", "NEEDS-INPUT");
+      followColumn(flowEl, id);
       await sleep(ms);
       nodeEl(flowEl, id)?.classList.add("approved");
       await sleep(480);
@@ -462,6 +568,10 @@ const firstId = ROTATION[0].id;
         d.classList.toggle("is-active", on);
       });
       if (liveEl && t) liveEl.textContent = `${t.domain}: ${t.pattern}`;
+      // Each flow starts at its left edge — preserve the LTR reading start.
+      const active = stageEl(id);
+      active.scrollLeft = 0;
+      updateFades(active);
     };
 
     if (reduce) {

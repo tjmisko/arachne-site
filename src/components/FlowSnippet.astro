@@ -36,8 +36,16 @@ const { nodes, caption } = Astro.props;
     display: flex;
     align-items: center;
     gap: 0;
-    flex-wrap: wrap;
-    row-gap: var(--s-12);
+    /* A pipeline reads left-to-right like a sentence — never wrap or stack it
+       vertically. If it's too wide for a narrow screen, scroll it horizontally. */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .track::-webkit-scrollbar {
+    display: none;
   }
   .node {
     font-family: var(--font-mono);
