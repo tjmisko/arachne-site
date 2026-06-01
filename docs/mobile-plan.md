@@ -1,0 +1,76 @@
+# Mobile plan — arachne-site
+
+*Drafted 2026-06-01. Governs how the desktop-first site degrades to phones.
+Companion to `DESIGN.md` and `parallel-flow-plan.md`.*
+
+## Governing constraints
+
+1. **The product is desktop-first.** The canvas is spatial and basically
+   unusable on a phone. So a mobile visitor is **evaluating, not building** —
+   the mobile site's job is to land the pitch and route them back to desktop,
+   not to simulate the canvas. (Memory: `arachne-product-desktop-first`.)
+2. **Left-to-right is load-bearing grammar.** A flow reads `source → … → action`
+   left-to-right, like reading a sentence. **Do not rotate flows to vertical on
+   mobile** — it breaks the grammar. (User, 2026-06-01.) This rules out the
+   common "stack the steps top-to-bottom" responsive trick.
+
+## Decided direction
+
+### 1. Hero on mobile = horizontal scroll-follow window
+
+Keep the flow at a **legible fixed node size** (wider than the viewport) instead
+of scaling the whole DAG down to fit. Wrap it in a horizontally-scrollable
+viewport that **auto-pans to keep the active stage in view as the timeline
+runs** — the pan tracks execution rightward, reinforcing the LTR grammar rather
+than fighting it. Manual swipe is allowed; edge fades hint there's more.
+
+Why this over the alternatives: vertical-stack breaks the grammar; fit-to-width
+makes labels ~6px (illegible); a static poster loses the "watch it run" hook.
+Scroll-follow keeps all three — legible nodes, LTR reading, live execution.
+
+### 2. Stance: lean into "best on desktop"
+
+A tasteful, **mobile-only** line near the hero/CTA — e.g. *"A desktop canvas.
+Best explored on a big screen."* (mono, `--fg-3`). Turns the desktop-only
+constraint into serious-tool positioning (an IDE, not a one-handed toy). CTA is
+unchanged: **View on GitHub / How it works**. **No email capture, no funnel** —
+this holds the DESIGN.md CTA stance.
+
+## Hero mechanic (implementation detail)
+
+- **Breakpoint ≤860px:** stop the `preserveAspectRatio` fit-to-width sizing;
+  render the active flow's SVG at a fixed legible scale so it overflows its
+  container. Wrap in `overflow-x: auto` (momentum scroll on iOS).
+- **Auto-follow:** in the timeline, when a stage goes RUNNING, scroll its column
+  into horizontal center (`scrollIntoView({ inline: "center", behavior:
+  "smooth" })`), but only when the container is actually scrollable. Parallel
+  nodes share a column, so one scroll reveals both branches.
+- **Lanes still fit:** the vertical fan (2 lanes) fits portrait height; only the
+  horizontal extent scrolls. (The hidden TPS egg has 4 lanes — it may also scroll
+  vertically; acceptable, it's an easter egg.)
+- **Edge fades:** subtle left/right gradient masks to signal scrollability.
+- **Reduced motion:** no smooth auto-scroll (jump or none); the static freeze
+  still applies; the user can scroll manually.
+- **Dots + pain line:** unchanged — full-size text below the window carries the
+  domain message regardless of the diagram.
+
+## Other spatial elements (audit, same principle)
+
+- `FlowSnippet` diagrams and the how-it-works visuals: scroll-or-wrap
+  horizontally, **never** rotate a left-right pipeline to vertical. Audit each
+  for overflow + legibility under the same rule.
+- Pre-existing: the display headline overflows ~16px at ≤414px — fix with a
+  `clamp()`/wrap pass during the mobile build (separate from the hero).
+
+## Open sub-decisions (settle at build)
+
+- Mobile node size — match desktop `NW 120`, or a touch smaller for more on
+  screen?
+- Does a manual swipe pause auto-follow (resume after idle), or do they coexist?
+- Exact placement of the "best on desktop" line (under the hero canvas vs beside
+  the CTA buttons).
+
+## Sequencing
+
+Independent of the hero PR, which is desktop-correct with a mobile stopgap
+(scale-to-fit). Ship the mobile scroll-follow as its **own follow-up PR**.

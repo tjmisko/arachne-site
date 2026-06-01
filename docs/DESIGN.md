@@ -13,7 +13,7 @@ terse, declarative copy. The site should read like the product wrote it.
 | # | Decision | Choice |
 |---|---|---|
 | Aesthetic | Fidelity to the product | **Bend it** — softer, more open layout; same palette and voice. |
-| Hero | The centerpiece | **Animated execution** — a non-interactive flow with run-state moving through it. |
+| Hero | The centerpiece | **Animated execution** — a rotating set of six domain flows, each fanning out into parallel steps that converge on a human gate. The diagram is non-interactive; only the domain dots that switch flows take input. Freezes under `prefers-reduced-motion`. |
 | Scope | Page count | **Small multi-page** — Home / How it works / Philosophy / Ownership + Blog. |
 | Voice | The hard constraint | **Does not bend.** Terse, declarative, specific. No marketing vocabulary. |
 | Mode | Default theme | **Dark.** A light marketing site would feel disowned by a dark product. |
@@ -55,8 +55,8 @@ terse, declarative copy. The site should read like the product wrote it.
 | Readable face | Inter for all prose in V1; the editorial zone (Philosophy, Essays) references `--font-editorial` so a serif can swap in later with a one-line change. |
 | OSS / commercial | The Ownership page is built price-agnostic, with a marked drop-in slot for a pricing/licensing block. |
 | Docs site | Doesn't exist yet; "Read the docs" points at the repo until it does. |
-| Logo / wordmark | Wordmark-only (mono, tracked). No standalone mark yet. |
-| Hero flow | The bundled Analyst Weekly Memo, including a Schedule trigger and the Summarize step, so it matches a real template. |
+| Hero flow | A rotating set of six domain flows (Competitive intel, Customer feedback, Recruiting, AP, Inbound leads, Contract review) + a hidden TPS easter egg; each fans out into parallel steps converging on a human gate. **Open thread:** three of the six (Recruiting, AP, Contract) must ship as bundled templates in the product repo to keep the "mirrors a real template" promise — tracked in Arachne's `Hero Template Set` planning doc. |
+| Mobile | **Direction set** (`docs/mobile-plan.md`). Canvas is desktop-first, so mobile lands the pitch + routes to desktop rather than demoing the canvas. Hero becomes a **horizontal scroll-follow window** (LTR is load-bearing grammar — never rotate flows vertical) at legible node size, auto-panning to track execution; plus a tasteful "best on desktop" signal, GitHub CTA, no funnel. Implementation is a follow-up PR (the hero PR ships with a scale-to-fit stopgap). |
 
 ## Pre-launch checklist
 
