@@ -68,9 +68,18 @@ this holds the DESIGN.md CTA stance.
   exposed as a CSS var on `.hero-rot` for easy tuning. The SVG width is
   `calc(var(--vw) * var(--node-scale) * 1px)`; the global `svg { max-width: 100% }`
   reset is overridden with `max-width: none` so the flow can overflow and scroll.
+- **Follow-slide motion** — the pan is a custom `requestAnimationFrame` tween
+  (`PAN_MS 800`, `easeInOutCubic`, dead-center framing), not the browser's quick
+  native `scrollTo({behavior:"smooth"})`, so it reads as a deliberate camera
+  follow. "Glide, then linger": the running step's dwell is extended to
+  `max(BASE, PAN_MS + LINGER_MS)` (`LINGER_MS 600` → 1400ms) only in
+  scroll-follow mode, so it stays visibly running ~0.6s after the slide settles.
+  Desktop (not scrollable) and the gate (`GATEMS 1800` already dwells past the
+  slide) are unchanged.
 - **Swipe vs auto-follow** — they coexist, but a genuine user gesture
-  (`pointerdown`/`touchstart`/`wheel`) pauses auto-follow for ~4s so a swipe
-  isn't fought. Programmatic `scrollTo` doesn't trip the cooldown.
+  (`pointerdown`/`touchstart`/`wheel`) cancels the in-flight pan and pauses
+  auto-follow for ~4s so a swipe isn't fought. Programmatic scroll (the tween)
+  doesn't trip the cooldown; it's also canceled on flow switch.
 - **"Best on desktop" placement** — a small mono `--fg-3` line directly under the
   hero canvas (`index.astro`), shown only ≤860px. No funnel.
 - **`FlowSnippet`** — switched from `flex-wrap: wrap` to `nowrap` +
