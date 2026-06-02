@@ -62,15 +62,33 @@ this holds the DESIGN.md CTA stance.
 - Pre-existing: the display headline overflows ~16px at ≤414px — fix with a
   `clamp()`/wrap pass during the mobile build (separate from the hero).
 
-## Open sub-decisions (settle at build)
+## Sub-decisions (settled at build, branch `hero-mobile-scroll`)
 
-- Mobile node size — match desktop `NW 120`, or a touch smaller for more on
-  screen?
-- Does a manual swipe pause auto-follow (resume after idle), or do they coexist?
-- Exact placement of the "best on desktop" line (under the hero canvas vs beside
-  the CTA buttons).
+- **Mobile node size** — `--node-scale: 0.9` (≈108px nodes, label ~9.9px),
+  exposed as a CSS var on `.hero-rot` for easy tuning. The SVG width is
+  `calc(var(--vw) * var(--node-scale) * 1px)`; the global `svg { max-width: 100% }`
+  reset is overridden with `max-width: none` so the flow can overflow and scroll.
+- **Follow-slide motion** — the pan is a custom `requestAnimationFrame` tween
+  (`PAN_MS 800`, `easeInOutCubic`, dead-center framing), not the browser's quick
+  native `scrollTo({behavior:"smooth"})`, so it reads as a deliberate camera
+  follow. "Glide, then linger": the running step's dwell is extended to
+  `max(BASE, PAN_MS + LINGER_MS)` (`LINGER_MS 600` → 1400ms) only in
+  scroll-follow mode, so it stays visibly running ~0.6s after the slide settles.
+  Desktop (not scrollable) and the gate (`GATEMS 1800` already dwells past the
+  slide) are unchanged.
+- **Swipe vs auto-follow** — they coexist, but a genuine user gesture
+  (`pointerdown`/`touchstart`/`wheel`) cancels the in-flight pan and pauses
+  auto-follow for ~4s so a swipe isn't fought. Programmatic scroll (the tween)
+  doesn't trip the cooldown; it's also canceled on flow switch.
+- **"Best on desktop" placement** — a small mono `--fg-3` line directly under the
+  hero canvas (`index.astro`), shown only ≤860px. No funnel.
+- **`FlowSnippet`** — switched from `flex-wrap: wrap` to `nowrap` +
+  `overflow-x: auto` so a left-to-right pipeline scrolls rather than wrapping.
+- **Headline** — `overflow-wrap: break-word` + `hyphens: auto`, plus a
+  `≤480px` font clamp; verified `documentElement` has zero horizontal overflow
+  at a true 360/390/414px viewport.
 
 ## Sequencing
 
-Independent of the hero PR, which is desktop-correct with a mobile stopgap
-(scale-to-fit). Ship the mobile scroll-follow as its **own follow-up PR**.
+Shipped as its own follow-up PR (branch `hero-mobile-scroll`), independent of the
+hero PR that carried the scale-to-fit stopgap. Done.
